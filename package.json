@@ -1,0 +1,15 @@
+{
+    "name": "podtube",
+    "private": "true",
+    "workspaces": [
+        "packages/*"
+    ],
+    "dependencies": {
+        "concurrently": "^6.2.0"
+    },
+    "scripts": {
+        "server": "yarn workspace server run start",
+        "webapp": "yarn workspace webapp run dev",
+        "start": "concurrently --kill-others-on-fail \"yarn run server\" \"yarn run webapp\""
+    }
+}
