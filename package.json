@@ -11,5 +11,9 @@
         "server": "yarn workspace server run start",
         "webapp": "yarn workspace webapp run dev",
         "start": "concurrently --kill-others-on-fail \"yarn run server\" \"yarn run webapp\""
+    },
+    "engines": {
+        "yarn": ">=1.22.10",
+        "node": "^12.10 || 14.x || 16.0.0"
     }
 }
