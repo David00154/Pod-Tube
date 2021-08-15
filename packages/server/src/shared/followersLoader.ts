@@ -1,31 +1,31 @@
 import DataLoader = require("dataloader");
 import { In } from "typeorm";
-import { UserToFollower } from "../entity/UserToFollower";
-const batchLoader = async (userIds: number[]) => {
-  const userFollowers = await UserToFollower.find({
+import { ChannelToFollower } from "../entity/ChannelToFollower";
+const batchLoader = async (channelIds: number[]) => {
+  const userFollowers = await ChannelToFollower.find({
     join: {
       alias: "userFollower",
       innerJoinAndSelect: {
-        followed: "userFollower.followed",
+        followedChannel: "userFollower.followedChannel",
       },
     },
     where: {
-      followerId: In(userIds),
+      owendChannelId: In(channelIds),
     },
-    relations: ["followed"],
+    // relations: ["channel"],
   });
-
-  const userIdToFollowers: { [key: number]: UserToFollower[] } = {};
+  console.log(userFollowers);
+  const userIdToFollowers: { [key: number]: ChannelToFollower[] } = {};
 
   userFollowers.forEach(async (uf: any) => {
     // console.log(uf);
-    if (uf.followerId in userIdToFollowers) {
-      userIdToFollowers[uf.followerId].push(uf);
+    if (uf.owendChannelId in userIdToFollowers) {
+      userIdToFollowers[uf.owendChannelId].push(uf);
     } else {
-      userIdToFollowers[uf.followerId] = [uf];
+      userIdToFollowers[uf.owendChannelId] = [uf];
     }
   });
-  return userIds.map((userId) => userIdToFollowers[userId]);
+  return channelIds.map((userId) => userIdToFollowers[userId]);
 };
 
 export const creeateFollowersLoader = () => new DataLoader(batchLoader);

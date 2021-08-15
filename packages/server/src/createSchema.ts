@@ -1,6 +1,5 @@
 import { buildSchema } from "type-graphql";
-import { ChannelResolver } from "./resolver/ChannelResolver";
-import { UserResolver } from "./resolver/UserResolver";
+import { UserResolver, ChannelResolver } from "./resolver";
 
 export async function createSchema() {
   return await buildSchema({

@@ -14,12 +14,12 @@ import {
 import { SharedEntity } from "../shared/SharedEntity";
 import { Channel } from "./Channel";
 import { v4 as uuid } from "uuid";
-import { UserToFollower } from "./UserToFollower";
+import { ChannelToFollower } from "./ChannelToFollower";
 // import { UserFollower } from "./UserFollower";
 // import { UserFollowers } from "./UserFollower";
 
 @ObjectType({ description: "User Schema/Entity" })
-@Entity()
+@Entity({ name: "users" })
 export class User extends SharedEntity {
   @Field()
   @Column()
@@ -45,21 +45,22 @@ export class User extends SharedEntity {
   @Field(() => Channel, { nullable: true })
   @OneToOne(() => Channel, (channel) => channel.user, {
     // primary: true,
+    onDelete: "CASCADE",
   })
   channel: Promise<Channel>;
 
-  @Field(() => [UserToFollower], { nullable: true })
-  @OneToMany(() => UserToFollower, (uf) => uf.followed)
-  @JoinColumn()
-  followersConnection: UserToFollower[];
+  // @Field(() => [ChannelToFollower], { nullable: true })
+  // @OneToMany(() => ChannelToFollower, (uf) => uf.followed)
+  // @JoinColumn()
+  // followersConnection: ChannelToFollower[];
 
-  @Field(() => [UserToFollower], { nullable: true })
-  // @OneToMany(() =>)
-  async followers(
-    @Ctx() { followersLoader }: any
-  ): Promise<UserToFollower[] | null | undefined> {
-    return followersLoader.load(this.id);
-  }
+  // @Field(() => [ChannelToFollower], { nullable: true })
+  // // @OneToMany(() =>)
+  // async followers(
+  //   @Ctx() { followersLoader }: any
+  // ): Promise<ChannelToFollower[] | null | undefined> {
+  //   return followersLoader.load(this.id);
+  // }
 }
 
 @InputType()

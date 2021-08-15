@@ -1,10 +1,18 @@
-import { Field, InputType, Int, ObjectType } from "type-graphql";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
+import { Ctx, Field, InputType, Int, ObjectType } from "type-graphql";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+} from "typeorm";
 import { SharedEntity } from "../shared/SharedEntity";
 import { User } from "./User";
+import { ChannelToFollower } from "./ChannelToFollower";
 
 @ObjectType({ description: "Channel Schema" })
-@Entity()
+@Entity({ name: "channels" })
 export class Channel extends SharedEntity {
   @Field()
   @Column()
@@ -17,9 +25,29 @@ export class Channel extends SharedEntity {
   @Field(() => User)
   @OneToOne(() => User, (user) => user.channel, {
     primary: true,
+    // cascade: true,
+    onDelete: "CASCADE",
   })
   @JoinColumn({ name: "user_id" })
   user: Promise<User>;
+
+  @Field(() => [ChannelToFollower], { nullable: true })
+  @OneToMany(() => ChannelToFollower, (uf) => uf.owendChannel, {
+    onDelete: "CASCADE",
+    primary: true,
+    // cascade: true,
+  })
+  // @JoinColumn()
+  followers: Promise<ChannelToFollower[]>;
+
+  // @Field(() => [ChannelToFollower], { nullable: true })
+  // // @OneToMany(() =>)
+  // async followers(
+  //   @Ctx() { followersLoader }: any
+  // ): Promise<ChannelToFollower[] | null | undefined> {
+  //   // console.log(this.id);
+  //   return followersLoader.load(this.id);
+  // }
 }
 
 @InputType()
